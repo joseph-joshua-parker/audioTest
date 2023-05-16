@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>HTML 5 Boilerplate</title>
+
+  </head>
+  <body>
+  <audio controls src="acknowledged.wav"></audio>
+
+	<script>
+		let audio = document.querySelector('audio');
+		console.log(audio);
+		navigator.mediaSession.metadata = new MediaMetadata({
+			title: 'Shadows of Ourselves',
+			artist: 'Thievery Corporation',
+			album: 'The Mirror Conspiracy',
+		});
+
+		navigator.mediaSession.setActionHandler('play', () => player.play());
+		navigator.mediaSession.setActionHandler('pause', () => player.pause());
+		navigator.mediaSession.setActionHandler('seekbackward', (details) => {
+			const skipTime = details.seekOffset || 1;
+			player.currentTime = Math.max(player.currentTime - skipTime, 0);
+		});
+
+		navigator.mediaSession.setActionHandler('seekforward', (details) => {
+			const skipTime = details.seekOffset || 1;
+			player.currentTime = Math.min(player.currentTime + skipTime, player.duration);
+		});
+
+		navigator.mediaSession.setActionHandler('seekto', (details) => {
+			if (details.fastSeek && 'fastSeek' in player) {
+			player.fastSeek(details.seekTime);
+			return;
+			}
+			player.currentTime = details.seekTime;
+		});
+
+		navigator.mediaSession.setActionHandler('previoustrack', () => {
+			player.currentTime = 0;
+		});
+	</script>
+  </body>
+</html>
+
